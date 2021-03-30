@@ -1,11 +1,73 @@
-.calendar-container {
-  display: grid;
-  grid-template-columns: 150px [sunday] 150px [monday] 150px [tuesday] 150px [wednesday] 150px [thursday] 150px [friday] 150px [saturday]
+#app{
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
 }
 
-.sunday, .monday, .tuesday, .wednesday, .thursday, .friday, .saturday {
+.calendar-container {
+  border-bottom: 1px;
+  border-bottom-style: solid;
+  width: 943px;
+  margin: auto;
+  display: grid;
+  grid-template-columns: 65px [time-labels] 125px [sunday] 125px [monday] 125px [tuesday] 125px [wednesday] 125px [thursday] 125px [friday] 125px [saturday];
+}
+
+.sunday, .monday, .tuesday, .wednesday, .thursday, .friday, .saturday{
+  text-align: center;
+}
+
+.middle-cell, .middle-cell-dashed {
   height: 10px;
-  margin: 10px;
-  background-color: blue;
-  border-color:black;
+  border-left: 1px;
+  border-left-style: solid;
+  border-top: 1px;
+  border-top-style: solid;
+}
+
+.middle-cell-dashed {
+  border-top-style: dashed;
+}
+
+.right-edge-cell, .right-edge-cell-dashed {
+  height: 10px;
+  border-right: 1px;
+  border-right-style: solid;
+  border-top: 1px;
+  border-top-style: solid;
+  border-left: 1px;
+  border-left-style: solid;
+}
+
+.right-edge-cell-dashed {
+  border-top-style: dashed;
+}
+
+.left-edge-cell, .left-edge-cell-dashed {
+  height: 10px;
+  border-left: 1px;
+  border-left-style: solid;
+  border-top: 1px;
+  border-top-style: solid;
+}
+
+.left-edge-cell-dashed {
+  border-top-style: dashed;
+}
+
+.time-labels{
+  position: relative;
+  top: 9px;
+}
+
+.time-label{
+  height: 44px;
+}
+
+.day-labels{
+  display: grid
+}
+
+.day-label{
+  width: 125px;
+  height: 0px;
+  margin
 }

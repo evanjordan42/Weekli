@@ -12,11 +12,36 @@ function Calendar(props) {
   }
   */
   const [prefs, setPrefs] = useState({})
-  const [paint, setPaint] = useState(false);
-  const [preference, setPreference] = useState(0);
+  const [paintMode, setPaintMode] = useState(false);
+  const [painting, setPainting] = useState(false);
+  const [selectedPref, selectPref] = useState(1);
 
-  function handleClick(e) {
+  function handleClick(time) {
+    if (paintMode) {
+      if (painting) {
+        setPainting(false);
+      } else {
+        setPainting(true)
+      }
+    }
+    changePreference(time)
+  }
 
+  function handleMouseOver(time) {
+    if (painting) {
+      changePreference(time);
+    }
+  }
+
+  function changePreference(time) {
+    //change color of cell
+    var cell = document.getElementById(time)
+    cell.style.backgroundColor = getStyle(null, selectedPref)
+
+    //update pref object
+    var newPrefs = prefs;
+    newPrefs[time] = selectedPref;
+    setPrefs(newPrefs);
   }
 
   // runs when save button is clicked
@@ -24,29 +49,133 @@ function Calendar(props) {
 
   }
 
+  function times() {
+    var output = [];
+    for (var i = 0; i < 24; i++) {
+      for (var j = 0; j < 4; j++) {
+        output.push(pad(`${i}${(j * 15) || '00'}`, 4))
+      }
+    }
+    return output
+    function pad(n, width, z) {
+      z = z || '0';
+      n = n + '';
+      return n.length >= width ? n : new Array(width - n.length + 1).join(z) + n;
+    }
+  }
+
+  function getStyle(time, justColor) {
+    if (justColor) {
+      switch (justColor) {
+        case -2: return 'red';
+        case -1: return 'lightcoral';
+        case 0: return 'cornsilk';
+        case 1: return 'lightgreen';
+      }
+    } else {
+      switch (prefs[time]) {
+        case -2: return { 'backgroundColor': 'red' };
+        case -1: return { 'backgroundColor': 'lightcoral' };
+        case undefined: return { 'backgroundColor': 'cornsilk' };
+        case 0: return { 'backgroundColor': 'cornsilk' }
+        case 1: return { 'backgroundColor': 'lightgreen' };
+      }
+    }
+  }
 
   return (
-    <div className="calendar-container">
-      <div className="sunday">
-
-      </div>
-      <div className="monday">
-
-      </div>
-      <div className="tuesday">
-
-      </div>
-      <div className="wednesday">
-
-      </div>
-      <div className="thursday">
-
-      </div>
-      <div className="friday">
-
-      </div>
-      <div className="saturday">
-
+    <div className="calendar">
+      <button onClick={() => { if (paintMode) { setPaintMode(false) } else { setPaintMode(true) } }} className="paint-button">Toggle Paint</button>
+      <div className="calendar-container">
+        <div className="time-labels">
+          {
+            ['12 AM—', '1 AM —', '2 AM —', '3 AM —', '4 AM —', '5 AM —', '6 AM —', '7 AM —', '8 AM —', '9 AM —', '10 AM—', '11 AM—', '12 PM—', '1 PM —', '2 PM —', '3 PM —', '4 PM —', '5 PM —', '6 PM —', '7 PM —', '8 PM —', '9 PM —', '10 PM—', '11 PM—'].map((label) => (<div key={label} className="time-label">{label}</div>))
+          }
+        </div>
+        <div className="sunday">Sunday
+          {
+            times().map((time) => {
+              var cellTime = `sun${time}`
+              if (time[2] !== '0') {
+                return (<div onMouseOver={() => { handleMouseOver(cellTime) }} style={getStyle(cellTime)} onClick={() => { handleClick(cellTime) }} key={cellTime} id={cellTime} className="left-edge-cell-dashed"></div>)
+              } else {
+                return (<div onMouseOver={() => { handleMouseOver(cellTime) }} style={getStyle(cellTime)} onClick={() => { handleClick(cellTime) }} key={cellTime} id={cellTime} className="left-edge-cell"></div>)
+              }
+            })
+          }
+        </div>
+        <div className="monday"> Monday
+          {
+            times().map((time) => {
+              var cellTime = `mon${time}`
+              if (time[2] !== '0') {
+                return (<div onMouseOver={() => { handleMouseOver(cellTime) }} style={getStyle(cellTime)} onClick={() => { handleClick(cellTime) }} key={cellTime} id={cellTime} className="middle-cell-dashed"></div>)
+              } else {
+                return (<div onMouseOver={() => { handleMouseOver(cellTime) }} style={getStyle(cellTime)} onClick={() => { handleClick(cellTime) }} key={cellTime} id={cellTime} className="middle-cell"></div>)
+              }
+            })
+          }
+        </div>
+        <div className="tuesday"> Tuesday
+          {
+            times().map((time) => {
+              var cellTime = `tue${time}`
+              if (time[2] !== '0') {
+                return (<div onMouseOver={() => { handleMouseOver(cellTime) }} style={getStyle(cellTime)} onClick={() => { handleClick(cellTime) }} key={cellTime} id={cellTime} className="middle-cell-dashed"></div>)
+              } else {
+                return (<div onMouseOver={() => { handleMouseOver(cellTime) }} style={getStyle(cellTime)} onClick={() => { handleClick(cellTime) }} key={cellTime} id={cellTime} className="middle-cell"></div>)
+              }
+            })
+          }
+        </div>
+        <div className="wednesday"> Wedensday
+          {
+            times().map((time) => {
+              var cellTime = `wed${time}`
+              if (time[2] !== '0') {
+                return (<div onMouseOver={() => { handleMouseOver(cellTime) }} style={getStyle(cellTime)} onClick={() => { handleClick(cellTime) }} key={cellTime} id={cellTime} className="middle-cell-dashed"></div>)
+              } else {
+                return (<div onMouseOver={() => { handleMouseOver(cellTime) }} style={getStyle(cellTime)} onClick={() => { handleClick(cellTime) }} key={cellTime} id={cellTime} className="middle-cell"></div>)
+              }
+            })
+          }
+        </div>
+        <div className="thursday"> Thursday
+          {
+            times().map((time) => {
+              var cellTime = `thu${time}`
+              if (time[2] !== '0') {
+                return (<div onMouseOver={() => { handleMouseOver(cellTime) }} style={getStyle(cellTime)} onClick={() => { handleClick(cellTime) }} key={cellTime} id={cellTime} className="middle-cell-dashed"></div>)
+              } else {
+                return (<div onMouseOver={() => { handleMouseOver(cellTime) }} style={getStyle(cellTime)} onClick={() => { handleClick(cellTime) }} key={cellTime} id={cellTime} className="middle-cell"></div>)
+              }
+            })
+          }
+        </div>
+        <div className="friday"> Friday
+          {
+            times().map((time) => {
+              var cellTime = `fri${time}`
+              if (time[2] !== '0') {
+                return (<div onMouseOver={() => { handleMouseOver(cellTime) }} style={getStyle(cellTime)} onClick={() => { handleClick(cellTime) }} key={cellTime} id={cellTime} className="middle-cell-dashed"></div>)
+              } else {
+                return (<div onMouseOver={() => { handleMouseOver(cellTime) }} style={getStyle(cellTime)} onClick={() => { handleClick(cellTime) }} key={cellTime} id={cellTime} className="middle-cell"></div>)
+              }
+            })
+          }
+        </div>
+        <div className="saturday"> Saturday
+          {
+            times().map((time) => {
+              var cellTime = `sat${time}`
+              if (time[2] !== '0') {
+                return (<div onMouseOver={() => { handleMouseOver(cellTime) }} style={getStyle(cellTime)} onClick={() => { handleClick(cellTime) }} key={cellTime} id={cellTime} className="right-edge-cell-dashed"></div>)
+              } else {
+                return (<div onMouseOver={() => { handleMouseOver(cellTime) }} style={getStyle(cellTime)} onClick={() => { handleClick(cellTime) }} key={cellTime} id={cellTime} className="right-edge-cell"></div>)
+              }
+            })
+          }
+        </div>
       </div>
     </div>
   )
