@@ -1,0 +1,11 @@
+.calendar-container {
+  display: grid;
+  grid-template-columns: 150px [sunday] 150px [monday] 150px [tuesday] 150px [wednesday] 150px [thursday] 150px [friday] 150px [saturday]
+}
+
+.sunday, .monday, .tuesday, .wednesday, .thursday, .friday, .saturday {
+  height: 10px;
+  margin: 10px;
+  background-color: blue;
+  border-color:black;
+}
