@@ -46,7 +46,7 @@ function Calendar(props) {
 
   // runs when save button is clicked
   function savePrefs() {
-
+    axios.post('/save', props.user.namepref)
   }
 
   function times() {
@@ -104,6 +104,7 @@ function Calendar(props) {
   }
 
   function handlePrefButton() {
+    setPainting(false);
     switch (selectedPref) {
       case -2: selectPref(-1); break;
       case -1: selectPref(0); break;
@@ -113,8 +114,10 @@ function Calendar(props) {
     }
   }
 
+
   return (
     <div className="calendar">
+      <button onClick={savePrefs} className="button">Save</button>
       <button onClick={() => { if (paintMode) { setPaintMode(false) } else { setPaintMode(true) } }} className="button">{paintButtonText()}</button>
       <button className="button" onClick={handlePrefButton}>{prefButtonText()}<div style={{ 'backgroundColor': getStyle(null, selectedPref) }} className="color-preview"></div></button>
       <div className="calendar-container">
