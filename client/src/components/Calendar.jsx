@@ -14,7 +14,7 @@ function Calendar(props) {
   const [prefs, setPrefs] = useState({})
   const [paintMode, setPaintMode] = useState(false);
   const [painting, setPainting] = useState(false);
-  const [selectedPref, selectPref] = useState(1);
+  const [selectedPref, selectPref] = useState(0);
 
   function handleClick(time) {
     if (paintMode) {
@@ -65,12 +65,13 @@ function Calendar(props) {
   }
 
   function getStyle(time, justColor) {
-    if (justColor) {
+    if (justColor !== undefined) {
       switch (justColor) {
         case -2: return 'red';
         case -1: return 'lightcoral';
         case 0: return 'cornsilk';
         case 1: return 'lightgreen';
+        case 2: return 'green';
       }
     } else {
       switch (prefs[time]) {
@@ -79,13 +80,43 @@ function Calendar(props) {
         case undefined: return { 'backgroundColor': 'cornsilk' };
         case 0: return { 'backgroundColor': 'cornsilk' }
         case 1: return { 'backgroundColor': 'lightgreen' };
+        case 2: return { 'backgroundColor': 'green' };
       }
+    }
+  }
+
+  function paintButtonText() {
+    if (paintMode) {
+      return 'Disable painting'
+    } else {
+      return 'Enable painting'
+    }
+  }
+
+  function prefButtonText() {
+    switch (selectedPref) {
+      case -2: return 'Cannot work';
+      case -1: return 'Prefer not to work';
+      case 0: return 'No preference';
+      case 1: return 'Prefer to work';
+      case 2: return 'Must work';
+    }
+  }
+
+  function handlePrefButton() {
+    switch (selectedPref) {
+      case -2: selectPref(-1); break;
+      case -1: selectPref(0); break;
+      case 0: selectPref(1); break;
+      case 1: selectPref(2); break;
+      case 2: selectPref(-2); break;
     }
   }
 
   return (
     <div className="calendar">
-      <button onClick={() => { if (paintMode) { setPaintMode(false) } else { setPaintMode(true) } }} className="paint-button">Toggle Paint</button>
+      <button onClick={() => { if (paintMode) { setPaintMode(false) } else { setPaintMode(true) } }} className="button">{paintButtonText()}</button>
+      <button className="button" onClick={handlePrefButton}>{prefButtonText()}<div style={{ 'backgroundColor': getStyle(null, selectedPref) }} className="color-preview"></div></button>
       <div className="calendar-container">
         <div className="time-labels">
           {

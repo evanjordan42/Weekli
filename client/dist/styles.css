@@ -62,12 +62,8 @@
   height: 44px;
 }
 
-.day-labels{
-  display: grid
-}
-
-.day-label{
-  width: 125px;
-  height: 0px;
-  margin
+.color-preview {
+  text-align: center;
+  height: 20px;
+  width: 20px;
 }
