@@ -11,9 +11,10 @@ function Calendar(props) {
     mon2345: 1,
   }
   */
-  const [prefs, setPrefs] = useState({})
+  const [prefs, setPrefs] = useState(props.user.prefs)
   const [paintMode, setPaintMode] = useState(false);
   const [painting, setPainting] = useState(false);
+  const [maxShifts, setMaxShifts] = useState(props.user.maxShifts);
   const [selectedPref, selectPref] = useState(0);
 
   function handleClick(time) {
@@ -25,6 +26,15 @@ function Calendar(props) {
       }
     }
     changePreference(time)
+  }
+
+  function handleChange(e, func) {
+    e.preventDefault();
+    func(e.target.value)
+  }
+
+  function getPrefs() {
+    axios.get(`/prefs?name=${props.name}`,)
   }
 
   function handleMouseOver(time) {
@@ -46,7 +56,7 @@ function Calendar(props) {
 
   // runs when save button is clicked
   function savePrefs() {
-    axios.post('/save', props.user.namepref)
+    axios.post('/prefs', { name: props.user.name, maxShifts, prefs })
   }
 
   function times() {
@@ -65,22 +75,38 @@ function Calendar(props) {
   }
 
   function getStyle(time, justColor) {
-    if (justColor !== undefined) {
-      switch (justColor) {
-        case -2: return 'red';
-        case -1: return 'lightcoral';
-        case 0: return 'cornsilk';
-        case 1: return 'lightgreen';
-        case 2: return 'green';
+    if (props.user.name === 'Add Shifts') {
+      // not doing if(justColor) becuase justColor can be zero
+      if (justColor !== undefined) {
+        switch (justColor) {
+          case 0: return 'cornsilk';
+          case 1: return 'rgba(169, 169, 169, 0.637)'
+        }
+      } else {
+        switch (prefs[time]) {
+          case undefined: return { 'backgroundColor': 'cornsilk' };
+          case 0: return { 'backgroundColor': 'cornsilk' };
+          case 1: return { 'backgroundColor': 'rgba(169, 169, 169, 0.637)' };
+        }
       }
     } else {
-      switch (prefs[time]) {
-        case -2: return { 'backgroundColor': 'red' };
-        case -1: return { 'backgroundColor': 'lightcoral' };
-        case undefined: return { 'backgroundColor': 'cornsilk' };
-        case 0: return { 'backgroundColor': 'cornsilk' }
-        case 1: return { 'backgroundColor': 'lightgreen' };
-        case 2: return { 'backgroundColor': 'green' };
+      if (justColor !== undefined) {
+        switch (justColor) {
+          case -2: return 'red';
+          case -1: return 'lightcoral';
+          case 0: return 'cornsilk';
+          case 1: return 'lightgreen';
+          case 2: return 'green';
+        }
+      } else {
+        switch (prefs[time]) {
+          case -2: return { 'backgroundColor': 'red' };
+          case -1: return { 'backgroundColor': 'lightcoral' };
+          case undefined: return { 'backgroundColor': 'cornsilk' };
+          case 0: return { 'backgroundColor': 'cornsilk' }
+          case 1: return { 'backgroundColor': 'lightgreen' };
+          case 2: return { 'backgroundColor': 'green' };
+        }
       }
     }
   }
@@ -94,32 +120,53 @@ function Calendar(props) {
   }
 
   function prefButtonText() {
-    switch (selectedPref) {
-      case -2: return 'Cannot work';
-      case -1: return 'Prefer not to work';
-      case 0: return 'No preference';
-      case 1: return 'Prefer to work';
-      case 2: return 'Must work';
+    if (props.user.name === 'Add Shifts') {
+      switch (selectedPref) {
+        case 0: return 'No shift';
+        case 1: return 'Shift'
+      }
+    } else {
+      switch (selectedPref) {
+        case -2: return 'Cannot work';
+        case -1: return 'Prefer not to work';
+        case 0: return 'No preference';
+        case 1: return 'Prefer to work';
+        case 2: return 'Must work';
+      }
     }
   }
 
   function handlePrefButton() {
-    setPainting(false);
-    switch (selectedPref) {
-      case -2: selectPref(-1); break;
-      case -1: selectPref(0); break;
-      case 0: selectPref(1); break;
-      case 1: selectPref(2); break;
-      case 2: selectPref(-2); break;
+    if (props.user.name === 'Add Shifts') {
+      setPainting(false);
+      switch (selectedPref) {
+        case 0: selectPref(1); break;
+        case 1: selectPref(0); break;
+      }
+    } else {
+      setPainting(false);
+      switch (selectedPref) {
+        case -2: selectPref(-1); break;
+        case -1: selectPref(0); break;
+        case 0: selectPref(1); break;
+        case 1: selectPref(2); break;
+        case 2: selectPref(-2); break;
+      }
     }
   }
 
 
   return (
     <div className="calendar">
+      <button onClick={() => { props.selectUser({}) }} className="button">Back (will not save!)</button>
       <button onClick={savePrefs} className="button">Save</button>
       <button onClick={() => { if (paintMode) { setPaintMode(false) } else { setPaintMode(true) } }} className="button">{paintButtonText()}</button>
       <button className="button" onClick={handlePrefButton}>{prefButtonText()}<div style={{ 'backgroundColor': getStyle(null, selectedPref) }} className="color-preview"></div></button>
+      <form>
+        Enter the maximum number of shifts you would work:
+        <input onChange={(e) => { handleChange(e, setMaxShifts) }} value={maxShifts} type="number"></input>
+      </form>
+      <div className="user-name">{`Setting preferences for ${props.user.name}`}</div>
       <div className="calendar-container">
         <div className="time-labels">
           {
