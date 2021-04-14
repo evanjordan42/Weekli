@@ -8,6 +8,8 @@ Simply add users and use the schedule interface to set preferences for specific 
 
 Enter shifts by clicking 'Add Shifts' and defining blocks of time in the same manner as setting preferences.
 
+--
+
 Future features include:
 - Multiple users per shift
 - Click and drag painting
