@@ -7,7 +7,8 @@ function Schedules(props) {
   const [userList, setUserList] = useState([]);
   const [shifts, setShifts] = useState([]);
   const [bestSchedule, setBestSchedule] = useState([]);
-  const [bestScore, setBestScore] = useState(-Infinity);
+  const [bestScore, setBestScore] = useState(-1000);
+  const [generating, setGenerating] = useState(false);
 
   function getUsers() {
     axios.get('/users')
@@ -32,6 +33,7 @@ function Schedules(props) {
   // converts preference-format shifts into array of arrays, each subarray being a shift
   function shiftBreak(shifts) {
     let slotArray = [];
+    delete shifts._ph
     for (let slot in shifts) {
       slotArray.push(slot);
     }
@@ -39,12 +41,14 @@ function Schedules(props) {
     let currentShift = [];
     for (var i = 0; i < slotArray.length; i++) {
       currentShift.push(slotArray[i])
-      var currentTime = slotArray[i].slice(3, 6);
-      var nextTime = slotArray[i + 1].slice(3, 6) || 0
-      if (Number(currentTime) + 15 !== Number(nextTime) && currentTime.slice(2, 3) !== '45') {
+      var currentDay = slotArray[i].slice(0, 3);
+      var nextDay = (slotArray[i + 1] || [0]).slice(0, 3);
+      var currentTime = slotArray[i].slice(3, 7);
+      var nextTime = (slotArray[i + 1] || [0]).slice(3, 7);
+      if (Number(currentTime) + 15 !== Number(nextTime) && currentTime.slice(2, 4) !== '45' || currentDay !== nextDay) {
         shiftArray.push(currentShift);
         currentShift = [];
-      } else if (currentTime.slice(2, 3) === '45' && Number(currentTime) + 55 !== Number(nextTime)) {
+      } else if (currentTime.slice(2, 4) === '45' && Number(currentTime) + 55 !== Number(nextTime) || currentDay !== nextDay) {
         shiftArray.push(currentShift);
         currentShift = [];
       }
@@ -63,6 +67,8 @@ function Schedules(props) {
 
     // create master schedule, shuffle it 10,000,000 or 100,000,000 times, truncating and scoring each combo, keeping track of top 5 schedules
 
+    setGenerating(true);
+
     let master = [];
     let numShifts = shifts.maxShifts;
 
@@ -71,9 +77,12 @@ function Schedules(props) {
         master.push(user.name);
       }
     }
-    for (var i = 0; i < 10000000; i++) {
+
+    for (var i = 0; i < 100000; i++) {
       score(shuffle(master))
     }
+    setGenerating(false);
+    console.log('done')
   }
 
   function score(inputSchedule) {
@@ -89,20 +98,26 @@ function Schedules(props) {
         var currentSlot = currentShift[j]
         // if assigned user cannot work, score is -inf
         if (prefIndex[currentUser][currentSlot] === -2) {
-          totalScore = -Infinity;
+          console.log('user cannot work, breaking..')
+          totalScore = -1000;
           i = shifts.length;
           break;
         }
-        for (var users of userList) {
+        for (var user of userList) {
           // if another user must work this shift, score is -inf
           if (user.prefs[currentShift] === 2 && user.name !== currentUser) {
-            totalScore = -Infinity
+            console.log('another user must work this shift, breaking..')
+            totalScore = -1000
             i = shifts.length;
             break;
           }
         }
         totalScore += prefIndex[currentUser][currentSlot] || 0
       }
+    }
+    if (totalScore > bestScore) {
+      setBestSchedule(schedule);
+      setBestScore(totalScore);
     }
   }
 
@@ -128,7 +143,19 @@ function Schedules(props) {
 
   return (
     <div className="schedules">
+      {bestSchedule.map((user, i) => {
+        if (i === bestSchedule.length - 1) {
+          return (<span key={i}><span key={i}>{user} | </span>
+            <div>Schedule score: {bestScore}</div>
+          </span>)
+        }
+        return (<span key={i}>{user} | </span>)
+      })}
+      {
+        generating ? <div>Generating... (This can take a minute)</div> : null
+      }
 
+      <button onClick={generateSchedules}>Generate Schedule</button>
     </div>
   )
 }
