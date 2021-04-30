@@ -6,10 +6,18 @@ import Title from './Title.jsx'
 
 function App() {
 
-  const [isMainPage, setIsMainPage] = useState(true)
+  const [isMainPage, setIsMainPage] = useState(false)
   const [selectedUser, selectUser] = useState({});
   const [showingSchedules, showSchedules] = useState(false)
 
+  useEffect((() => {
+    if (!isMainPage) {
+      setIsMainPage(true);
+    } else {
+      setIsMainPage(false);
+    }
+  })
+    , [selectedUser.name || null, showingSchedules])
 
   return (
     <div id="app-grid">
@@ -19,9 +27,7 @@ function App() {
           selectedUser.name ? <Calendar user={selectedUser} selectUser={selectUser} /> : <div><Users selectedUser={selectedUser} selectUser={selectUser} />
             <button id="go-to-schedule-button" onClick={() => { showSchedules(true) }} className="button">Go to schedule</button></div>
         }
-
       </div>
-
       {
         showingSchedules ? <Schedules showingSchedules={showingSchedules} /> : null
       }

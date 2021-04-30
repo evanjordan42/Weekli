@@ -57,7 +57,7 @@ function Calendar(props) {
   // runs when save button is clicked
   function savePrefs() {
     axios.post('/prefs', { name: props.user.name, maxShifts, prefs })
-      .then(props.selectUser({}))
+      .then(() => { props.selectUser({}) })
   }
 
   function times() {
@@ -156,14 +156,13 @@ function Calendar(props) {
     }
   }
 
-
   return (
     <div className="calendar">
       <button onClick={() => { props.selectUser({}) }} className="button">Exit without saving</button>
       <button onClick={savePrefs} className="button">Save and exit</button>
       <button onClick={() => { if (paintMode) { setPaintMode(false) } else { setPaintMode(true) } }} className="button">{paintButtonText()}</button>
       <button className="button" style={{ 'backgroundColor': getStyle(null, selectedPref) }} onClick={handlePrefButton}><div className="preference-text">{prefButtonText()}</div></button>
-      <div className="user-name">Setting preferences for <span className="bold">{props.user.name}</span></div>
+      <div className="user-name">{'Setting preferences for'} <span className="bold">{props.user.name}</span></div>
       <form>
         Enter the maximum number of shifts you would work in a week:&nbsp;
         <input className="shift-form" onChange={(e) => { handleChange(e, setMaxShifts) }} value={maxShifts} type="number"></input>

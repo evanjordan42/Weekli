@@ -9,9 +9,11 @@ function Title({ isMainPage, selectUser }) {
       </div>
     )
   } else {
-    <div id="not-main-page-title">
-      <h2 onClick={() => { selectUser({}) }}>Weekli</h2>
-    </div>
+    return (
+      <div id="not-main-page-title">
+        <div>Weekli</div>
+      </div>
+    )
   }
 }
 

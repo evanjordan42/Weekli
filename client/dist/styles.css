@@ -27,10 +27,10 @@
 
 .calendar-container {
   border: 2px solid black;
-  background-color: white;
+  background-color: #ffffffb0;
   border-radius: 5px;
   margin-top: 1px;
-  padding: 10px;
+  padding: 20px;
   height: 60vh;
   overflow: scroll;
   border-bottom: 1px;
@@ -115,15 +115,15 @@
 #menu {
   width:min-content;
   text-align: center;
-  padding-top: 50px;
-  padding-bottom: 50px;
-  padding-left: 100px;
-  padding-right: 100px;
+  padding-top: 25px;
+  padding-bottom: 25px;
+  padding-left: 75px;
+  padding-right: 75px;
   justify-self: center;
   grid-row-start: body-start;
   grid-column-start: center-left;
   border-radius: 5px;
-  background-color: #ecf8ff
+  background-color: #ffffff80
 }
 
 .user-form{
@@ -132,11 +132,6 @@
   height: 33px;
   position: relative;
   left: 5px;
-}
-
-.user-form-hidden{
-  margin: 11px;
-  height: 33px;
 }
 
 .user-list {
@@ -149,6 +144,7 @@
   text-align: center;
   border: 2px solid black;
   margin-bottom: 5px;
+  margin-top: 5px;
   width: 186px;
   max-height: 220px;
   overflow: scroll;
@@ -172,7 +168,7 @@
 
 .add-user-button{
   position: relative;
-  top: 1px;
+  top: 2px;
   width: auto;
   height: auto;
   padding: 5px;
@@ -187,6 +183,7 @@
 }
 
 #main-page-title {
+  font-weight: bold;
   font-size: 60px;
   text-align: center;
   overflow: visible;
@@ -195,6 +192,13 @@
   grid-column-end: right-edge;
   grid-row-start: header-start;
   grid-row-end: body-start;
+}
+
+#not-main-page-title{
+  font-weight: bold;
+  justify-self: center;
+  color: white;
+  font-size: 30px;
 }
 
 #subtitle{
