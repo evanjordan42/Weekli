@@ -2,7 +2,37 @@
   font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
 }
 
+#body{
+  background-color: #63baf0;
+}
+
+.button {
+  font-family : inherit;
+  font-size: larger;
+  background-color: white;
+  border-color: rgb(0, 0, 0);
+  border: 2px solid;
+  margin: 5px;
+  padding: 15px;
+  border-radius: 5px;
+  transition: background-color .2s;
+  width: 200px;
+}
+
+.button:hover{
+  cursor: pointer;
+  transition: background-color .2s;
+  background-color: lightblue;
+}
+
 .calendar-container {
+  border: 2px solid black;
+  background-color: white;
+  border-radius: 5px;
+  margin-top: 1px;
+  padding: 10px;
+  height: 60vh;
+  overflow: scroll;
   border-bottom: 1px;
   border-bottom-style: solid;
   width: 943px;
@@ -62,23 +92,118 @@
   height: 44px;
 }
 
-.color-preview {
+.preference-text{
+  background-color: white;
+  border-radius: 5px;
+}
+
+.user-name{
+  margin-top: 10px;
+  margin-bottom: 10px;
+  font-size: large;
+}
+
+.shift-form{
+  width: 3em;
+  margin-bottom: 5px;
+}
+
+.bold{
+  font-weight: bold;
+}
+
+#menu {
+  width:min-content;
   text-align: center;
-  height: 20px;
-  width: 20px;
+  padding-top: 50px;
+  padding-bottom: 50px;
+  padding-left: 100px;
+  padding-right: 100px;
+  justify-self: center;
+  grid-row-start: body-start;
+  grid-column-start: center-left;
+  border-radius: 5px;
+  background-color: #ecf8ff
+}
+
+.user-form{
+  border: 2px;
+  border-radius: 5px;
+  height: 33px;
+  position: relative;
+  left: 5px;
+}
+
+.user-form-hidden{
+  margin: 11px;
+  height: 33px;
 }
 
 .user-list {
+  font-size: larger;
+  margin: auto;
+  padding: 5px;
+  background-color: white;
+  overflow: auto;
+  border-radius: 5px;
   text-align: center;
-  border-style: solid;
-  border-width: 1px;
-  width: 100px;
+  border: 2px solid black;
+  margin-bottom: 5px;
+  width: 186px;
+  max-height: 220px;
+  overflow: scroll;
 }
 
 .user {
   margin: auto;
-  width: 75px;
+  margin-top: 5px;
+  border-radius: 5px;
+  padding: 5px;
+  width: 150px;
   cursor:pointer;
   border-style:solid;
   border-width: 1px;
+}
+
+.user:hover{
+  transition: background-color .2s;
+  background-color: lightblue;
+}
+
+.add-user-button{
+  position: relative;
+  top: 1px;
+  width: auto;
+  height: auto;
+  padding: 5px;
+}
+
+#app-grid {
+  height: 98vh;
+  display: grid;
+  grid-template-columns: [left-edge] 1fr [center-left]1fr [center-right] 1fr [right-edge];
+  grid-template-rows: [header-start] 20% [body-start] 60% [body-end] 20%;
+  align-items: center;
+}
+
+#main-page-title {
+  font-size: 60px;
+  text-align: center;
+  overflow: visible;
+  color: white;
+  grid-column-start: left-edge;
+  grid-column-end: right-edge;
+  grid-row-start: header-start;
+  grid-row-end: body-start;
+}
+
+#subtitle{
+  margin-top: 10px;
+  font-size: 20px;
+}
+
+#go-to-schedule-button{
+  grid-column-start: center-left;
+  grid-row-start: body-start;
+  align-self: end;
 }

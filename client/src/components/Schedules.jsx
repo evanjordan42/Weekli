@@ -155,7 +155,7 @@ function Schedules(props) {
         generating ? <div>Generating... (This can take a minute)</div> : null
       }
 
-      <button onClick={generateSchedules}>Generate Schedule</button>
+      <button className="button" onClick={generateSchedules}>Generate Schedule</button>
     </div>
   )
 }

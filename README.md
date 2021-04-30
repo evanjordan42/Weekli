@@ -19,3 +19,6 @@ Future features include:
 - Click and drag painting
 - Proper schedule display
 - Faster schedule generating algorithm
+- Ability to edit schedule (maybe)
+- Create schedule with select users
+- Save schedules
