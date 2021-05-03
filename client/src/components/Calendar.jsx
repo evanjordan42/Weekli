@@ -48,9 +48,7 @@ function Calendar({ user, selectUser, displayMode, showingSchedules, showSchedul
     for (var i = 0; i < shifts.length; i++) {
       var shift = shifts[i];
       var midpoint = shift[Math.floor(shift.length / 2)]
-      document.getElementById(midpoint).innerHTML = (schedule[i]);
-      var classNames = document.getElementById.className;
-      console.log(classNames)
+      document.getElementById(midpoint).innerHTML = "<span class='schedule-name-label'>" + schedule[i] + "</span>"
     }
   }
 

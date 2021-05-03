@@ -45,6 +45,18 @@
   text-align: center;
 }
 
+.schedule-name-label {
+  padding: 5px;
+  border-radius: 5px;
+  font-weight: bold;
+  max-width: 125px;
+  color: black;
+  font-size: large;
+  position: relative;
+  bottom: 10px;
+  background-color: white;
+}
+
 .middle-cell, .middle-cell-dashed {
   height: 10px;
   border-left: 1px;

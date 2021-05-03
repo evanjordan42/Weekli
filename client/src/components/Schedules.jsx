@@ -5,6 +5,7 @@ function Schedules({ showingSchedules, shifts, setShifts, bestSchedule = [], set
   //userList should exclude shifts
   const [prefIndex, setPrefIndex] = useState({})
   const [userList, setUserList] = useState([]);
+  const [runningBestScore, setRunningBestScore] = useState(-1000)
   const [localShifts, setLocalShifts] = useState([]);
   const [generating, setGenerating] = useState(false);
 
@@ -41,7 +42,7 @@ function Schedules({ showingSchedules, shifts, setShifts, bestSchedule = [], set
     setGenerating(true);
 
     let master = [];
-    let bestScore = -1000;
+    let bestScore = runningBestScore;
     let bestSchedule = [];
 
     for (var user of userList) {
@@ -49,16 +50,17 @@ function Schedules({ showingSchedules, shifts, setShifts, bestSchedule = [], set
         master.push(user.name);
       }
     }
-    console.log()
 
     for (var i = 0; i < 10; i++) {
       score(shuffle(master))
     }
-
+    setRunningBestScore(bestScore)
     setBestSchedule(bestSchedule)
     setGenerating(false);
     console.log('done')
     labelShifts(localShifts, bestSchedule);
+
+
 
     function score(inputSchedule) {
       let totalScore = 0;
@@ -90,9 +92,6 @@ function Schedules({ showingSchedules, shifts, setShifts, bestSchedule = [], set
           totalScore += prefIndex[currentUser][currentSlot] || 0
         }
       }
-      console.log('schedule: ', schedule)
-      console.log('totalScore: ', totalScore)
-      console.log('bestScore: ', bestScore)
       if (totalScore > bestScore) {
         bestScore = totalScore;
         bestSchedule = schedule
