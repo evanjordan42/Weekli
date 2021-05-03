@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 
-function Calendar(props) {
+function Calendar({ user, name, selectUser }) {
   /*
   prefs object example :
   {
@@ -10,11 +10,13 @@ function Calendar(props) {
     sun0030: -1,
     mon2345: 1,
   }
+
   */
-  const [prefs, setPrefs] = useState(props.user.prefs)
+  const [mode, setMode] = useState()
+  const [prefs, setPrefs] = useState(user.prefs)
   const [paintMode, setPaintMode] = useState(false);
   const [painting, setPainting] = useState(false);
-  const [maxShifts, setMaxShifts] = useState(props.user.maxShifts);
+  const [maxShifts, setMaxShifts] = useState(user.maxShifts);
   const [selectedPref, selectPref] = useState(0);
 
   function handleClick(time) {
@@ -34,7 +36,7 @@ function Calendar(props) {
   }
 
   function getPrefs() {
-    axios.get(`/prefs?name=${props.name}`,)
+    axios.get(`/prefs?name=${name}`,)
   }
 
   function handleMouseOver(time) {
@@ -56,8 +58,8 @@ function Calendar(props) {
 
   // runs when save button is clicked
   function savePrefs() {
-    axios.post('/prefs', { name: props.user.name, maxShifts, prefs })
-      .then(() => { props.selectUser({}) })
+    axios.post('/prefs', { name: user.name, maxShifts, prefs })
+      .then(() => { selectUser({}) })
   }
 
   function times() {
@@ -76,7 +78,7 @@ function Calendar(props) {
   }
 
   function getStyle(time, justColor) {
-    if (props.user.name === 'Add Shifts') {
+    if (user.name === 'Add Shifts') {
       // not doing if(justColor) becuase justColor can be zero
       if (justColor !== undefined) {
         switch (justColor) {
@@ -121,7 +123,7 @@ function Calendar(props) {
   }
 
   function prefButtonText() {
-    if (props.user.name === 'Add Shifts') {
+    if (user.name === 'Add Shifts') {
       switch (selectedPref) {
         case 0: return 'No shift';
         case 1: return 'Shift'
@@ -138,7 +140,7 @@ function Calendar(props) {
   }
 
   function handlePrefButton() {
-    if (props.user.name === 'Add Shifts') {
+    if (user.name === 'Add Shifts') {
       setPainting(false);
       switch (selectedPref) {
         case 0: selectPref(1); break;
@@ -158,11 +160,11 @@ function Calendar(props) {
 
   return (
     <div className="calendar">
-      <button onClick={() => { props.selectUser({}) }} className="button">Exit without saving</button>
+      <button onClick={() => { selectUser({}) }} className="button">Exit without saving</button>
       <button onClick={savePrefs} className="button">Save and exit</button>
       <button onClick={() => { if (paintMode) { setPaintMode(false) } else { setPaintMode(true) } }} className="button">{paintButtonText()}</button>
       <button className="button" style={{ 'backgroundColor': getStyle(null, selectedPref) }} onClick={handlePrefButton}><div className="preference-text">{prefButtonText()}</div></button>
-      <div className="user-name">{'Setting preferences for'} <span className="bold">{props.user.name}</span></div>
+      <div className="user-name">{'Setting preferences for'} <span className="bold">{user.name}</span></div>
       <form>
         Enter the maximum number of shifts you would work in a week:&nbsp;
         <input className="shift-form" onChange={(e) => { handleChange(e, setMaxShifts) }} value={maxShifts} type="number"></input>
