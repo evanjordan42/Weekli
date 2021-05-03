@@ -1,7 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 
-function Calendar({ user, name, selectUser }) {
+import Schedules from './Schedules.jsx'
+
+function Calendar({ user, selectUser, displayMode, showingSchedules, showSchedules, shifts, setShifts, bestSchedule, setBestSchedule }) {
   /*
   prefs object example :
   {
@@ -12,7 +14,6 @@ function Calendar({ user, name, selectUser }) {
   }
 
   */
-  const [mode, setMode] = useState()
   const [prefs, setPrefs] = useState(user.prefs)
   const [paintMode, setPaintMode] = useState(false);
   const [painting, setPainting] = useState(false);
@@ -20,14 +21,16 @@ function Calendar({ user, name, selectUser }) {
   const [selectedPref, selectPref] = useState(0);
 
   function handleClick(time) {
-    if (paintMode) {
-      if (painting) {
-        setPainting(false);
-      } else {
-        setPainting(true)
+    if (!showingSchedules) {
+      if (paintMode) {
+        if (painting) {
+          setPainting(false);
+        } else {
+          setPainting(true)
+        }
       }
+      changePreference(time)
     }
-    changePreference(time)
   }
 
   function handleChange(e, func) {
@@ -35,13 +38,19 @@ function Calendar({ user, name, selectUser }) {
     func(e.target.value)
   }
 
-  function getPrefs() {
-    axios.get(`/prefs?name=${name}`,)
-  }
-
   function handleMouseOver(time) {
     if (painting) {
       changePreference(time);
+    }
+  }
+
+  function labelShifts(shifts, schedule) {
+    for (var i = 0; i < shifts.length; i++) {
+      var shift = shifts[i];
+      var midpoint = shift[Math.floor(shift.length / 2)]
+      document.getElementById(midpoint).innerHTML = (schedule[i]);
+      var classNames = document.getElementById.className;
+      console.log(classNames)
     }
   }
 
@@ -158,17 +167,35 @@ function Calendar({ user, name, selectUser }) {
     }
   }
 
+  function PageDescription() {
+    if (showingSchedules) {
+      return (<div className="user-name">Press <span className="bold">Generate Schedules</span> to display a schedule that best matches user preferences</div>)
+    } else if (user.name === 'Add Shifts') {
+      return (<div className="user-name bold">Setting Shifts</div>)
+    } else {
+      return (<div className="user-name">{'Setting preferences for'} <span className="bold">{user.name}</span></div>)
+    }
+  }
+
   return (
     <div className="calendar">
-      <button onClick={() => { selectUser({}) }} className="button">Exit without saving</button>
-      <button onClick={savePrefs} className="button">Save and exit</button>
-      <button onClick={() => { if (paintMode) { setPaintMode(false) } else { setPaintMode(true) } }} className="button">{paintButtonText()}</button>
-      <button className="button" style={{ 'backgroundColor': getStyle(null, selectedPref) }} onClick={handlePrefButton}><div className="preference-text">{prefButtonText()}</div></button>
-      <div className="user-name">{'Setting preferences for'} <span className="bold">{user.name}</span></div>
-      <form>
-        Enter the maximum number of shifts you would work in a week:&nbsp;
+      {
+        showingSchedules ? <button onClick={() => { selectUser({}); showSchedules(false) }} className="button">Back</button> :
+          <div>
+            <button onClick={() => { selectUser({}) }} className="button">Exit without saving</button>
+            <button onClick={savePrefs} className="button">Save and exit</button>
+            <button onClick={() => { if (paintMode) { setPaintMode(false) } else { setPaintMode(true) } }} className="button">{paintButtonText()}</button>
+            <button className="button" style={{ 'backgroundColor': getStyle(null, selectedPref) }} onClick={handlePrefButton}><div className="preference-text">{prefButtonText()}</div></button>
+          </div>
+      }
+      <PageDescription />
+      {
+        showingSchedules ? null : <form>
+          Enter the maximum number of shifts you would work in a week:&nbsp;
         <input className="shift-form" onChange={(e) => { handleChange(e, setMaxShifts) }} value={maxShifts} type="number"></input>
-      </form>
+        </form>
+      }
+
       <div className="calendar-container">
         <div className="time-labels">
           {
@@ -260,6 +287,10 @@ function Calendar({ user, name, selectUser }) {
           }
         </div>
       </div>
+      {
+        showingSchedules ? <Schedules labelShifts={labelShifts} user={user} bestSchedule={bestSchedule} setBestSchedule={setBestSchedule} shifts={shifts} setShifts={setShifts} showingSchedules={showingSchedules} /> : null
+      }
+
     </div>
   )
 }

@@ -72,7 +72,7 @@ function Users(props) {
           <button className="button add-user-button" onClick={handleAdd}>Add</button>
         </form> : <br></br>
       }
-      <button className="button" onClick={addShifts}>Add shifts</button>
+      <button className="button" onClick={addShifts}>Set shifts</button>
     </div>
   )
 }
