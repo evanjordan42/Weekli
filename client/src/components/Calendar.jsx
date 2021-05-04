@@ -167,11 +167,27 @@ function Calendar({ user, selectUser, displayMode, showingSchedules, showSchedul
 
   function PageDescription() {
     if (showingSchedules) {
-      return (<div className="user-name">Press <span className="bold">Generate Schedules</span> to display a schedule that best matches user preferences</div>)
+      return (<div className="user-name">Press <span className="bold">Generate Schedule</span> to display a schedule that best matches user preferences</div>)
     } else if (user.name === 'Add Shifts') {
       return (<div className="user-name bold">Setting Shifts</div>)
     } else {
       return (<div className="user-name">{'Setting preferences for'} <span className="bold">{user.name}</span></div>)
+    }
+  }
+
+  function NumberOfShiftsPrompt() {
+    if (showingSchedules) {
+      return null;
+    } else if (user.name === 'Add Shifts') {
+      return (<form>
+        Please enter the number of shifts:&nbsp;
+        <input className="shift-form" onChange={(e) => { handleChange(e, setMaxShifts) }} value={maxShifts} type="number"></input>
+      </form>)
+    } else {
+      return (<form>
+        Enter the maximum number of shifts you would work in a week:&nbsp;
+        <input className="shift-form" onChange={(e) => { handleChange(e, setMaxShifts) }} value={maxShifts} type="number"></input>
+      </form>)
     }
   }
 
@@ -187,12 +203,7 @@ function Calendar({ user, selectUser, displayMode, showingSchedules, showSchedul
           </div>
       }
       <PageDescription />
-      {
-        showingSchedules ? null : <form>
-          Enter the maximum number of shifts you would work in a week:&nbsp;
-        <input className="shift-form" onChange={(e) => { handleChange(e, setMaxShifts) }} value={maxShifts} type="number"></input>
-        </form>
-      }
+      <NumberOfShiftsPrompt />
 
       <div className="calendar-container">
         <div className="time-labels">

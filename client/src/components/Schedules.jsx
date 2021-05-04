@@ -6,6 +6,7 @@ function Schedules({ showingSchedules, shifts, setShifts, bestSchedule = [], set
   const [prefIndex, setPrefIndex] = useState({})
   const [userList, setUserList] = useState([]);
   const [runningBestScore, setRunningBestScore] = useState(-1000)
+  const [runningBestSchedule, setRunningBestSchedule] = useState([])
   const [localShifts, setLocalShifts] = useState([]);
   const [generating, setGenerating] = useState(false);
 
@@ -43,7 +44,7 @@ function Schedules({ showingSchedules, shifts, setShifts, bestSchedule = [], set
 
     let master = [];
     let bestScore = runningBestScore;
-    let bestSchedule = [];
+    let bestSchedule = runningBestSchedule;
 
     for (var user of userList) {
       for (var i = 0; i < user.maxShifts; i++) {
@@ -51,13 +52,14 @@ function Schedules({ showingSchedules, shifts, setShifts, bestSchedule = [], set
       }
     }
 
-    for (var i = 0; i < 10; i++) {
+    for (var i = 0; i < 1000; i++) {
       score(shuffle(master))
     }
     setRunningBestScore(bestScore)
+    setRunningBestSchedule(bestSchedule)
     setBestSchedule(bestSchedule)
     setGenerating(false);
-    console.log('done')
+    console.log('done, score: ', bestScore)
     labelShifts(localShifts, bestSchedule);
 
 
@@ -75,7 +77,6 @@ function Schedules({ showingSchedules, shifts, setShifts, bestSchedule = [], set
           var currentSlot = currentShift[j]
           // if assigned user cannot work, score is -inf
           if (prefIndex[currentUser][currentSlot] === -2) {
-            console.log('user cannot work, breaking..')
             totalScore = -1000;
             i = localShifts.length;
             break;
@@ -83,7 +84,6 @@ function Schedules({ showingSchedules, shifts, setShifts, bestSchedule = [], set
           for (var user of userList) {
             // if another user must work this shift, score is -inf
             if (user.prefs[currentShift] === 2 && user.name !== currentUser) {
-              console.log('another user must work this shift, breaking..')
               totalScore = -1000
               i = localShifts.length;
               break;
