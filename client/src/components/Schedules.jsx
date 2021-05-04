@@ -42,20 +42,37 @@ function Schedules({ showingSchedules, shifts, setShifts, bestSchedule = [], set
 
     // create master schedule, shuffle it 10,000,000 or 100,000,000 times, truncating and scoring each combo, keeping track of top 5 schedules
 
+    // v2.0: descent with modification
+    // the starting schedule will be the best out of e.g. 10,000 random schedules.
+    // have a while loop that partially shuffles a schedule and scores it, if a schedule is better, reset looping variable and redefine seed schedule to be partially shuffled.
+
     setGenerating(true);
+
 
     let master = [];
     let bestScore = runningBestScore;
     let bestSchedule = runningBestSchedule;
 
     for (var user of userList) {
-      for (var i = 0; i < shifts.length; i++) {
+      for (var i = 0; i < user.maxShifts; i++) {
         master.push(user.name);
       }
     }
 
-    for (var i = 0; i < 50000; i++) {
+    // bestSchedule starts as the best from 10,000 randomly generated schedules
+
+    for (var i = 0; i < 10000; i++) {
       score(shuffle(master))
+    }
+
+    // while i < 10000 lets say, partially shuffle bestSchedule then score it, if score() returns true, reset i
+
+    var i = 0;
+    while (i < 10000) {
+      if (score(mutate(bestSchedule))) {
+        i = 0;
+      }
+      i++
     }
 
     setRunningBestScore(bestScore)
@@ -97,7 +114,10 @@ function Schedules({ showingSchedules, shifts, setShifts, bestSchedule = [], set
       if (totalScore > bestScore) {
         bestScore = totalScore;
         bestSchedule = schedule
+        console.log('new best')
+        return true;
       }
+      return false;
     }
   }
 
@@ -143,7 +163,24 @@ function Schedules({ showingSchedules, shifts, setShifts, bestSchedule = [], set
       array[currentIndex] = array[randomIndex];
       array[randomIndex] = temporaryValue;
     }
+    return array;
+  }
 
+  function mutate(inputArray) {
+    var array = [...inputArray]
+    var maxShuffles = Math.floor(array.length / 3), temporaryValue, randomIndex1, randomIndex2;
+
+    while (maxShuffles > 0) {
+
+      randomIndex1 = Math.floor(Math.random() * array.length);
+      randomIndex2 = Math.floor(Math.random() * array.length);
+
+      temporaryValue = array[randomIndex1];
+      array[randomIndex1] = array[randomIndex2];
+      array[randomIndex2] = temporaryValue;
+
+      maxShuffles -= 1;
+    }
     return array;
   }
 
