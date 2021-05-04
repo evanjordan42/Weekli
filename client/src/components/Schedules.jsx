@@ -152,17 +152,8 @@ function Schedules({ showingSchedules, shifts, setShifts, bestSchedule = [], set
 
   return (
     <div className="schedules">
-      {/* {localBestSchedule.map((user, i) => {
-        labelShifts(localShifts, localBestSchedule);
-        if (i === localBestSchedule.length - 1) {
-          return (<span key={i}><span key={i}>{user} | </span>
-            <div>Schedule score: {bestScore}</div>
-          </span>)
-        }
-        return (<span key={i}>{user} | </span>)
-      })} */}
       {
-        generating ? <div>Generating... (This can take a minute)</div> : null
+        generating ? <div>Error: there is likely no possible schedule with the current preferences and shifts. Double check these and try again</div> : null
       }
 
       <button className="button" onClick={generateSchedules}>Generate Schedule</button>
