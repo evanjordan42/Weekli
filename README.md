@@ -5,6 +5,7 @@ This program allows multiple users to enter in preferences for working a given t
 ## To start:
 
 Ensure an instance of MongoDB is running on the default port 27017.
+
 Run 'npm start'
 
 ## To use:
@@ -13,6 +14,6 @@ Add users with the 'Add New User' button and use the schedule interface to set p
 
 Each user must also enter the maximum number of shifts they are available for.
 
-Enter shifts by clicking 'Set Shifts' and defining blocks of time in the same manner as setting preferences.
+Enter shifts by clicking the 'Set Shifts' button and defining blocks of time in the same manner as setting preferences.
 
 To view a generated schedule, click the 'Go to schedule' button, then click 'Generate schedule'. If there are multiple possible schedules with the same preference score, clicking this will cycle through them randomly.
