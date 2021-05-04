@@ -59,16 +59,12 @@ function Schedules({ showingSchedules, shifts, setShifts, bestSchedule = [], set
       }
     }
 
-    // bestSchedule starts as the best from 10,000 randomly generated schedules
-
-    for (var i = 0; i < 10000; i++) {
-      score(shuffle(master))
-    }
-
     // while i < 10000 lets say, partially shuffle bestSchedule then score it, if score() returns true, reset i
 
+    bestSchedule = master
+
     var i = 0;
-    while (i < 10000) {
+    while (i < 1000) {
       if (score(mutate(bestSchedule))) {
         i = 0;
       }
@@ -147,40 +143,17 @@ function Schedules({ showingSchedules, shifts, setShifts, bestSchedule = [], set
     return shiftArray
   }
 
-  function shuffle(inputArray) {
-    var array = [...inputArray]
-    var currentIndex = array.length, temporaryValue, randomIndex;
-
-    // While there remain elements to shuffle...
-    while (0 !== currentIndex) {
-
-      // Pick a remaining element...
-      randomIndex = Math.floor(Math.random() * currentIndex);
-      currentIndex -= 1;
-
-      // And swap it with the current element.
-      temporaryValue = array[currentIndex];
-      array[currentIndex] = array[randomIndex];
-      array[randomIndex] = temporaryValue;
-    }
-    return array;
-  }
-
   function mutate(inputArray) {
     var array = [...inputArray]
-    var maxShuffles = Math.floor(array.length / 3), temporaryValue, randomIndex1, randomIndex2;
+    var temporaryValue, randomIndex1, randomIndex2;
 
-    while (maxShuffles > 0) {
+    randomIndex1 = Math.floor(Math.random() * array.length);
+    randomIndex2 = Math.floor(Math.random() * array.length);
 
-      randomIndex1 = Math.floor(Math.random() * array.length);
-      randomIndex2 = Math.floor(Math.random() * array.length);
+    temporaryValue = array[randomIndex1];
+    array[randomIndex1] = array[randomIndex2];
+    array[randomIndex2] = temporaryValue;
 
-      temporaryValue = array[randomIndex1];
-      array[randomIndex1] = array[randomIndex2];
-      array[randomIndex2] = temporaryValue;
-
-      maxShuffles -= 1;
-    }
     return array;
   }
 
@@ -191,6 +164,7 @@ function Schedules({ showingSchedules, shifts, setShifts, bestSchedule = [], set
       }
 
       <button className="button" onClick={generateSchedules}>Generate Schedule</button>
+      <div>(Can take a minute!)</div>
     </div>
   )
 }
