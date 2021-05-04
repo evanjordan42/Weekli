@@ -175,22 +175,6 @@ function Calendar({ user, selectUser, displayMode, showingSchedules, showSchedul
     }
   }
 
-  function NumberOfShiftsPrompt() {
-    if (showingSchedules) {
-      return null;
-    } else if (user.name === 'Add Shifts') {
-      return (<form>
-        Please enter the number of shifts:&nbsp;
-        <input className="shift-form" onChange={(e) => { handleChange(e, setMaxShifts) }} value={maxShifts} type="number"></input>
-      </form>)
-    } else {
-      return (<form>
-        Enter the maximum number of shifts you would work in a week:&nbsp;
-        <input className="shift-form" onChange={(e) => { handleChange(e, setMaxShifts) }} value={maxShifts} type="number"></input>
-      </form>)
-    }
-  }
-
   return (
     <div className="calendar">
       {
@@ -203,7 +187,12 @@ function Calendar({ user, selectUser, displayMode, showingSchedules, showSchedul
           </div>
       }
       <PageDescription />
-      <NumberOfShiftsPrompt />
+      {
+        showingSchedules || user.name === 'Add Shifts' ? null : <form>
+          Enter the maximum number of shifts you would work in a week:&nbsp;
+        <input className="shift-form" onChange={(e) => { handleChange(e, setMaxShifts) }} value={maxShifts} type="number"></input>
+        </form>
+      }
 
       <div className="calendar-container">
         <div className="time-labels">

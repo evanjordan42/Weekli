@@ -10,6 +10,8 @@ function Schedules({ showingSchedules, shifts, setShifts, bestSchedule = [], set
   const [localShifts, setLocalShifts] = useState([]);
   const [generating, setGenerating] = useState(false);
 
+  useEffect(getUsers, [showingSchedules])
+
   function getUsers() {
     axios.get('/users')
       .then((res) => {
@@ -47,14 +49,15 @@ function Schedules({ showingSchedules, shifts, setShifts, bestSchedule = [], set
     let bestSchedule = runningBestSchedule;
 
     for (var user of userList) {
-      for (var i = 0; i < user.maxShifts; i++) {
+      for (var i = 0; i < shifts.length; i++) {
         master.push(user.name);
       }
     }
 
-    for (var i = 0; i < 1000; i++) {
+    for (var i = 0; i < 50000; i++) {
       score(shuffle(master))
     }
+
     setRunningBestScore(bestScore)
     setRunningBestSchedule(bestSchedule)
     setBestSchedule(bestSchedule)
@@ -62,14 +65,13 @@ function Schedules({ showingSchedules, shifts, setShifts, bestSchedule = [], set
     console.log('done, score: ', bestScore)
     labelShifts(localShifts, bestSchedule);
 
-
-
     function score(inputSchedule) {
       let totalScore = 0;
       // score and keep track of best schedule
 
       // if the number of shifts is not evenly divisble by the number of users, and each user can work the same amount, the master schedule will be too long, and so must get truncated.
       var schedule = inputSchedule.slice(0, localShifts.length)
+
       for (var i = 0; i < localShifts.length; i++) {
         var currentShift = localShifts[i]
         var currentUser = schedule[i];
@@ -124,11 +126,6 @@ function Schedules({ showingSchedules, shifts, setShifts, bestSchedule = [], set
     }
     return shiftArray
   }
-
-  useEffect(getUsers, [showingSchedules])
-
-
-
 
   function shuffle(inputArray) {
     var array = [...inputArray]
