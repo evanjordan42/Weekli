@@ -44,14 +44,6 @@ function Calendar({ user, selectUser, displayMode, showingSchedules, showSchedul
     }
   }
 
-  function labelShifts(shifts, schedule) {
-    for (var i = 0; i < shifts.length; i++) {
-      var shift = shifts[i];
-      var midpoint = shift[Math.floor(shift.length / 2)]
-      document.getElementById(midpoint).innerHTML = "<span class='schedule-name-label'>" + schedule[i] + "</span>"
-    }
-  }
-
   function changePreference(time) {
     //change color of cell
     var cell = document.getElementById(time)
@@ -286,7 +278,7 @@ function Calendar({ user, selectUser, displayMode, showingSchedules, showSchedul
         </div>
       </div>
       {
-        showingSchedules ? <Schedules labelShifts={labelShifts} user={user} bestSchedule={bestSchedule} setBestSchedule={setBestSchedule} shifts={shifts} setShifts={setShifts} showingSchedules={showingSchedules} /> : null
+        showingSchedules ? <Schedules user={user} bestSchedule={bestSchedule} setBestSchedule={setBestSchedule} shifts={shifts} setShifts={setShifts} showingSchedules={showingSchedules} /> : null
       }
 
     </div>
