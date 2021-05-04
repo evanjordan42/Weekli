@@ -44,7 +44,7 @@ function App() {
           <div className="menu">
             {
               selectedUser.name && !showingSchedules ? <Calendar showingSchedules={showingSchedules} user={selectedUser} selectUser={selectUser} /> : <div><Users selectedUser={selectedUser} selectUser={selectUser} />
-                <button id="go-to-schedule-button" onClick={goToSchedule} className="button">Go to schedule</button></div>
+                <button id="go-to-schedule-button" onClick={goToSchedule} className="button">Go to Schedule</button></div>
             }
           </div>
       }

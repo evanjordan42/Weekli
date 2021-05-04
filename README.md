@@ -9,7 +9,7 @@ Run 'npm start'
 
 ## To use:
 
-Simply add users and use the schedule interface to set preferences for specific periods of time. Click the preference selector (starts at 'No preference') to cycle through the preference options. These options include 'Cannot work', 'Prefer not to work', 'No preference', 'Prefer to work', and 'Must work'. Time can be selected by clicking individual 15-minute blocks, or by toggling the 'Enable painting' button, which allows a user to quickly set preferences for stretches of time. To paint a block of time, click once to begin painting, then move the mouse over blocks to fill them in, then click again to stop painting (clicking and dragging will not work!).
+Add users with the 'Add New User' button and use the schedule interface to set preferences for specific periods of time. Click the preference selector (starts at 'No preference') to cycle through the preference options. These options include 'Cannot work', 'Prefer not to work', 'No preference', 'Prefer to work', and 'Must work'. Time can be selected by clicking individual 15-minute blocks, or by toggling the 'Enable painting' button, which allows a user to quickly set preferences for stretches of time. To paint a block of time, click once to begin painting, then move the mouse over blocks to fill them in, then click again to stop painting (clicking and dragging will not work!).
 
 Each user must also enter the maximum number of shifts they are available for.
 
