@@ -53,7 +53,7 @@ function Schedules({ showingSchedules, shifts, setShifts, setBestSchedule, user,
     let bestScore = -Infinity;
 
     let i = 0;
-    // in an array of size n, there are n^2 number of possible mutations, and tripling it gives it better odds that all the possible mutations occur
+    // in an array of size n, there are n^2 number of possible mutations, and multiplying it gives it better odds that all the possible mutations occur
     let numberOfMutations = Math.pow(localShifts.length, 2) * 3
     while (i < numberOfMutations) {
       if (score(mutate(bestUnslicedSchedule))) {
@@ -88,7 +88,12 @@ function Schedules({ showingSchedules, shifts, setShifts, setBestSchedule, user,
               totalScore -= 1000
             }
           }
-          totalScore += prefIndex[currentUser][currentSlot] || 0
+          // for fairness: a schedule that has two people working times they have no preference for should have a higher score than if one person were working when they prefered and someone else worked when they prefered not to
+          if (prefIndex[currentUser][currentSlot] === -1) {
+            totalScore -= 1.01
+          } else {
+            totalScore += prefIndex[currentUser][currentSlot] || 0
+          }
         }
       }
       if (totalScore > bestScore) {
