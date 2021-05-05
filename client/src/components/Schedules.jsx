@@ -53,7 +53,9 @@ function Schedules({ showingSchedules, shifts, setShifts, setBestSchedule, user,
     let bestScore = -Infinity;
 
     let i = 0;
-    while (i < 1000) {
+    // in an array of size n, there are n^2 number of possible mutations, and tripling it gives it better odds that all the possible mutations occur
+    let numberOfMutations = Math.pow(localShifts.length, 2) * 3
+    while (i < numberOfMutations) {
       if (score(mutate(bestUnslicedSchedule))) {
         i = 0;
       }
@@ -128,8 +130,13 @@ function Schedules({ showingSchedules, shifts, setShifts, setBestSchedule, user,
     let array = [...inputArray]
     let temporaryValue, randomIndex1, randomIndex2;
 
-    randomIndex1 = Math.floor(Math.random() * array.length);
-    randomIndex2 = Math.floor(Math.random() * array.length);
+    // guarantee true mutation
+    var loopBreaker = 0;
+    do {
+      loopBreaker++;
+      randomIndex1 = Math.floor(Math.random() * array.length);
+      randomIndex2 = Math.floor(Math.random() * array.length);
+    } while (array[randomIndex1] === array[randomIndex2] && loopBreaker < 10000)
 
     temporaryValue = array[randomIndex1];
     array[randomIndex1] = array[randomIndex2];
