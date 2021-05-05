@@ -44,32 +44,28 @@ function Schedules({ showingSchedules, shifts, setShifts, setBestSchedule, user,
     setGenerating(true);
 
     let master = [];
-    let bestScore = -1000
-
     for (let user of userList) {
       for (let i = 0; i < user.maxShifts; i++) {
         master.push(user.name);
       }
     }
-
-    let bestSchedule = master
+    let bestUnslicedSchedule = master;
+    let bestScore = -Infinity;
 
     let i = 0;
-    while (i < 2000) {
-      if (score(mutate(bestSchedule))) {
+    while (i < 1000) {
+      if (score(mutate(bestUnslicedSchedule))) {
         i = 0;
       }
       i++
     }
-
-    setBestSchedule(bestSchedule)
+    let bestSchedule = bestUnslicedSchedule.slice(0, localShifts.length)
+    setBestSchedule(bestSchedule);
     setGenerating(false);
-    console.log('done, score: ', bestScore)
     labelShifts(localShifts, bestSchedule);
+    console.log('score: ', bestScore)
 
     function score(inputSchedule) {
-      // score and keep track of best schedule
-
       let totalScore = 0;
 
       // if the number of shifts is not evenly divisble by the number of users, and each user can work the same amount, the master schedule will be too long, and so must get truncated.
@@ -80,18 +76,14 @@ function Schedules({ showingSchedules, shifts, setShifts, setBestSchedule, user,
         let currentUser = schedule[i];
         for (let j = 0; j < currentShift.length; j++) {
           let currentSlot = currentShift[j]
-          // if assigned user cannot work, score is -1000
+          // if assigned user cannot work this shift, score is heavily reduced
           if (prefIndex[currentUser][currentSlot] === -2) {
-            totalScore = -1000;
-            i = localShifts.length;
-            break;
+            totalScore -= 1000;
           }
           for (let user of userList) {
-            // if another user must work this shift, score is -1000
+            // if another user must work this shift, score is heavily reduced
             if (user.prefs[currentShift] === 2 && user.name !== currentUser) {
-              totalScore = -1000
-              i = localShifts.length;
-              break;
+              totalScore -= 1000
             }
           }
           totalScore += prefIndex[currentUser][currentSlot] || 0
@@ -99,14 +91,14 @@ function Schedules({ showingSchedules, shifts, setShifts, setBestSchedule, user,
       }
       if (totalScore > bestScore) {
         bestScore = totalScore;
-        bestSchedule = schedule
+        bestUnslicedSchedule = inputSchedule
         return true;
       }
       return false;
     }
   }
 
-  // converts preference-format shifts into array of arrays, each subarray being a shift
+  // converts preference-format shifts into an array of arrays, each subarray being a shift
   function shiftBreak(shifts) {
     let slotArray = [];
     delete shifts._ph
