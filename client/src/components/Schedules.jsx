@@ -56,11 +56,19 @@ function Schedules({ showingSchedules, shifts, setShifts, setBestSchedule, user,
     // in an array of size n, there are n^2 number of possible mutations, and multiplying it gives it better odds that all the possible mutations occur
     let numberOfMutations = Math.pow(localShifts.length, 2) * 3
     while (i < numberOfMutations) {
-      if (score(mutate(bestUnslicedSchedule))) {
+      if (score(mutate(bestUnslicedSchedule, false))) {
         i = 0;
       }
       i++
     }
+    i = 0;
+    while (i < numberOfMutations * localShifts.length) {
+      if (score(mutate(bestUnslicedSchedule, true))) {
+        i = 0;
+      }
+      i++
+    }
+
     let bestSchedule = bestUnslicedSchedule.slice(0, localShifts.length)
     setBestSchedule(bestSchedule);
     setGenerating(false);
@@ -131,9 +139,9 @@ function Schedules({ showingSchedules, shifts, setShifts, setBestSchedule, user,
     return shiftArray
   }
 
-  function mutate(inputArray) {
+  function mutate(inputArray, doubleSwap) {
     let array = [...inputArray]
-    let temporaryValue, randomIndex1, randomIndex2;
+    let temporaryValue, randomIndex1, randomIndex2, randomIndex3;
 
     // guarantee true mutation
     var loopBreaker = 0;
@@ -141,11 +149,23 @@ function Schedules({ showingSchedules, shifts, setShifts, setBestSchedule, user,
       loopBreaker++;
       randomIndex1 = Math.floor(Math.random() * array.length);
       randomIndex2 = Math.floor(Math.random() * array.length);
-    } while (array[randomIndex1] === array[randomIndex2] && loopBreaker < 10000)
+    } while (array[randomIndex1] === array[randomIndex2] && loopBreaker < 1000)
 
     temporaryValue = array[randomIndex1];
     array[randomIndex1] = array[randomIndex2];
     array[randomIndex2] = temporaryValue;
+
+    loopBreaker = 0;
+    if (doubleSwap) {
+      do {
+        loopBreaker++;
+        randomIndex3 = Math.floor(Math.random() * array.length);
+      } while (array[randomIndex1] === array[randomIndex3] && loopBreaker < 1000)
+
+      temporaryValue = array[randomIndex1];
+      array[randomIndex1] = array[randomIndex3];
+      array[randomIndex3] = temporaryValue;
+    }
 
     return array;
   }
