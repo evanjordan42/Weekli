@@ -32,6 +32,32 @@ function Schedules({ showingSchedules, shifts, setShifts, setBestSchedule, user,
       })
   }
 
+  // converts preference-format shifts into an array of arrays, each subarray being a shift
+  function shiftBreak(shifts) {
+    let slotArray = [];
+    delete shifts._ph
+    for (let slot in shifts) {
+      slotArray.push(slot);
+    }
+    let shiftArray = [];
+    let currentShift = [];
+    for (let i = 0; i < slotArray.length; i++) {
+      currentShift.push(slotArray[i])
+      let currentDay = slotArray[i].slice(0, 3);
+      let nextDay = (slotArray[i + 1] || [0]).slice(0, 3);
+      let currentTime = slotArray[i].slice(3, 7);
+      let nextTime = (slotArray[i + 1] || [0]).slice(3, 7);
+      if (Number(currentTime) + 15 !== Number(nextTime) && currentTime.slice(2, 4) !== '45' || currentDay !== nextDay) {
+        shiftArray.push(currentShift);
+        currentShift = [];
+      } else if (currentTime.slice(2, 4) === '45' && Number(currentTime) + 55 !== Number(nextTime) || currentDay !== nextDay) {
+        shiftArray.push(currentShift);
+        currentShift = [];
+      }
+    }
+    return shiftArray
+  }
+
   function labelShifts(shifts, schedule) {
     for (let i = 0; i < shifts.length; i++) {
       let shift = shifts[i];
@@ -52,21 +78,16 @@ function Schedules({ showingSchedules, shifts, setShifts, setBestSchedule, user,
     let bestUnslicedSchedule = master;
     let bestScore = -Infinity;
 
-    let i = 0;
-    // in an array of size n, there are n^2 number of possible mutations, and multiplying it gives it better odds that all the possible mutations occur
-    let numberOfMutations = Math.pow(localShifts.length, 2) * 3
-    while (i < numberOfMutations) {
-      if (score(mutate(bestUnslicedSchedule, false))) {
-        i = 0;
+    for (let i = 0; i < localShifts.length; i++) {
+      for (let j = i; j < localShifts.length; j++) {
+        for (let k = 0; k < localShifts.length; k++) {
+          if (score(swap(bestUnslicedSchedule, i, j, k))) {
+            i = 0;
+            j = 0;
+            k = 0;
+          }
+        }
       }
-      i++
-    }
-    i = 0;
-    while (i < numberOfMutations * localShifts.length) {
-      if (score(mutate(bestUnslicedSchedule, true))) {
-        i = 0;
-      }
-      i++
     }
 
     let bestSchedule = bestUnslicedSchedule.slice(0, localShifts.length)
@@ -113,31 +134,66 @@ function Schedules({ showingSchedules, shifts, setShifts, setBestSchedule, user,
     }
   }
 
-  // converts preference-format shifts into an array of arrays, each subarray being a shift
-  function shiftBreak(shifts) {
-    let slotArray = [];
-    delete shifts._ph
-    for (let slot in shifts) {
-      slotArray.push(slot);
+  function swap(inputArray, first, second, third) {
+    let array = [...inputArray]
+    let temporaryValue;
+    temporaryValue = array[first];
+    array[first] = array[second];
+    array[second] = temporaryValue;
+
+    if (third || third === 0) {
+      temporaryValue = array[first];
+      array[first] = array[third];
+      array[third] = temporaryValue;
     }
-    let shiftArray = [];
-    let currentShift = [];
-    for (let i = 0; i < slotArray.length; i++) {
-      currentShift.push(slotArray[i])
-      let currentDay = slotArray[i].slice(0, 3);
-      let nextDay = (slotArray[i + 1] || [0]).slice(0, 3);
-      let currentTime = slotArray[i].slice(3, 7);
-      let nextTime = (slotArray[i + 1] || [0]).slice(3, 7);
-      if (Number(currentTime) + 15 !== Number(nextTime) && currentTime.slice(2, 4) !== '45' || currentDay !== nextDay) {
-        shiftArray.push(currentShift);
-        currentShift = [];
-      } else if (currentTime.slice(2, 4) === '45' && Number(currentTime) + 55 !== Number(nextTime) || currentDay !== nextDay) {
-        shiftArray.push(currentShift);
-        currentShift = [];
+    return array;
+  }
+
+  return (
+    <div className="schedules">
+      {
+        generating ? <div>Error: cannot display schedule. There is likely no possible schedule with the current preferences and shifts. Double check these and try again</div> : null
+      }
+
+      <button className="button" onClick={generateSchedules}>Generate Schedule</button>
+      <div>(Can take a minute for large schedules)</div>
+    </div>
+  )
+}
+
+export default Schedules;
+
+/*
+old algorithms:
+
+    let i = 0;
+    // in an array of size n, there are n^2 number of possible mutations, and multiplying it gives it better odds that all the possible mutations occur
+    let numberOfMutations = Math.pow(localShifts.length, 2) * 3
+    while (i < numberOfMutations) {
+      if (score(mutate(bestUnslicedSchedule, false))) {
+        i = 0;
+      }
+      i++
+    }
+    i = 0;
+    while (i < numberOfMutations * localShifts.length) {
+      if (score(mutate(bestUnslicedSchedule, true))) {
+        i = 0;
+      }
+      i++
+    }
+
+    for (let i = 0; i < localShifts.length; i++) {
+      for (let j = i; j < localShifts.length; j++) {
+        if (i !== j) {
+          if (score(swap(bestUnslicedSchedule, i, j))) {
+            i = 0;
+            j = 0;
+          }
+        }
       }
     }
-    return shiftArray
-  }
+
 
   function mutate(inputArray, doubleSwap) {
     let array = [...inputArray]
@@ -170,16 +226,7 @@ function Schedules({ showingSchedules, shifts, setShifts, setBestSchedule, user,
     return array;
   }
 
-  return (
-    <div className="schedules">
-      {
-        generating ? <div>Error: cannot display schedule. There is likely no possible schedule with the current preferences and shifts. Double check these and try again</div> : null
-      }
 
-      <button className="button" onClick={generateSchedules}>Generate Schedule</button>
-      <div>(Can take a minute for large schedules)</div>
-    </div>
-  )
-}
 
-export default Schedules;
+
+*/
