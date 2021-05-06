@@ -16,4 +16,4 @@ Each user must also enter the maximum number of shifts they are available for.
 
 Enter shifts by clicking the 'Set Shifts' button and defining blocks of time in the same manner as setting preferences.
 
-To view a generated schedule, click the 'Go to schedule' button, then click 'Generate schedule'. If there are multiple possible schedules with the same preference score, clicking this will cycle through them randomly.
+To view a generated schedule, click the 'Go to schedule' button, then click 'Generate schedule'.
