@@ -13,6 +13,18 @@ module.exports.getAll = (req, res) => {
   })
 }
 
+module.exports.deleteUser = (req, res) => {
+  models.User.deleteOne({ name: req.body.name }, (err) => {
+    if (err) {
+      console.log('error deleting user')
+      res.status(404).send('error deleting user')
+    } else {
+      console.log('deleted user ', req.body.name)
+      res.end();
+    }
+  })
+}
+
 module.exports.getPrefs = (req, res) => {
   models.User.find({ name: req.body.name }, (err, prefs) => {
     if (err) {

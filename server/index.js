@@ -17,6 +17,7 @@ app.use('/', express.static(path.join(__dirname, '../client/dist')));
 app.get('/users', controllers.getAll);
 app.get('/prefs', controllers.getPrefs)
 app.post('/prefs', controllers.postPrefs);
+app.delete('/users', controllers.deleteUser);
 
 
 

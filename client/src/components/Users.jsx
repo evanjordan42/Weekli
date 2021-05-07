@@ -14,10 +14,9 @@ function Users({ selectedUser, selectUser }) {
   }
 
   useEffect(getUsers, [selectedUser])
-  useEffect(popluatePrefs, [])
 
   // for reliable functioning, object is populated with 0's
-  function popluatePrefs() {
+  function populatePrefs() {
     let populatedPrefs = {};
     let days = ['sun', 'mon', 'tue', 'wed', 'thu', 'fri', 'sat']
     days.map((day) => {
@@ -97,7 +96,7 @@ function Users({ selectedUser, selectUser }) {
       {
         addUser ? <form>
           <input className="user-form" type="text" onChange={(e) => { handleChange(e, setForm) }} value={form} placeholder="Enter a new name"></input>
-          <button className="button add-user-button" onClick={handleAdd}>Add</button>
+          <button className="button small-button" onClick={handleAdd}>Add</button>
         </form> : <br></br>
       }
       <button className="button" onClick={addShifts}>Set Shifts</button>

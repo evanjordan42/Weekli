@@ -14,7 +14,7 @@ function Calendar({ user, selectUser, displayMode, showingSchedules, showSchedul
   }
 
   */
-
+  const [deleting, setDeleting] = useState(false)
   const [prefs, setPrefs] = useState(user.prefs)
   const [paintMode, setPaintMode] = useState(false);
   const [painting, setPainting] = useState(false);
@@ -60,6 +60,11 @@ function Calendar({ user, selectUser, displayMode, showingSchedules, showSchedul
   function savePrefs() {
     axios.post('/prefs', { name: user.name, maxShifts, prefs })
       .then(() => { selectUser({}) })
+  }
+
+  function deleteUser() {
+    axios.delete('/users', { data: { name: user.name } })
+      .then(() => { setDeleting(false); selectUser({}) })
   }
 
   function times() {
@@ -280,6 +285,15 @@ function Calendar({ user, selectUser, displayMode, showingSchedules, showSchedul
       </div>
       {
         showingSchedules ? <Schedules user={user} bestSchedule={bestSchedule} setBestSchedule={setBestSchedule} shifts={shifts} setShifts={setShifts} showingSchedules={showingSchedules} /> : null
+      }
+      {
+        !showingSchedules ? <button className="button" onClick={() => { setDeleting(true) }}>Delete user</button> : null
+      }
+      {
+        deleting ? <div>Are you sure you want to delete&nbsp;
+          <span className="bold">{user.name}</span>? This cannot be undone<br></br>
+          <button onClick={deleteUser} className="button small-button">Yes</button>
+          <button onClick={() => { setDeleting(false) }} className="button small-button">No</button></div> : null
       }
 
     </div>
