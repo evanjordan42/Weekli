@@ -287,7 +287,7 @@ function Calendar({ user, selectUser, displayMode, showingSchedules, showSchedul
         showingSchedules ? <Schedules user={user} bestSchedule={bestSchedule} setBestSchedule={setBestSchedule} shifts={shifts} setShifts={setShifts} showingSchedules={showingSchedules} /> : null
       }
       {
-        !showingSchedules && !user.name === 'Add Shifts' ? <button className="button" onClick={() => { setDeleting(true) }}>Delete user</button> : null
+        !showingSchedules && user.name !== 'Add Shifts' ? <button className="button" onClick={() => { setDeleting(true) }}>Delete user</button> : null
       }
       {
         deleting ? <div>Are you sure you want to delete&nbsp;
