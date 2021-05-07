@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios'
 
-function Users(props) {
+function Users({ selectedUser, selectUser }) {
   const [userList, setUserList] = useState([])
   const [form, setForm] = useState('')
   const [addUser, setAddUser] = useState(false);
@@ -13,16 +13,29 @@ function Users(props) {
       })
   }
 
-  useEffect(getUsers, [props.selectedUser])
+  useEffect(getUsers, [selectedUser])
+  useEffect(popluatePrefs, [])
+
+  // for reliable functioning, object is populated with 0's
+  function popluatePrefs() {
+    let populatedPrefs = {};
+    let days = ['sun', 'mon', 'tue', 'wed', 'thu', 'fri', 'sat']
+    days.map((day) => {
+      times().map((time) => {
+        populatedPrefs[day + time] = 0
+      })
+    })
+
+    return populatedPrefs;
+  }
 
   function handleAdd(e) {
     if (form) {
       e.preventDefault();
       let newUserList = userList;
-      newUserList.push({ name: form, maxShifts: 0, prefs: { '_ph': null } }); // _ph is placeholder
+      newUserList.push({ name: form, maxShifts: 0, prefs: populatePrefs() });
       setUserList(newUserList);
-      props.selectUser({ name: form, maxShifts: 0, prefs: { '_ph': null } })
-      //alert(`User added! Set preferences for ${form}, going back will not save user`)
+      selectUser({ name: form, maxShifts: 0, prefs: populatePrefs() });
       setForm('');
     } else {
       alert('Must enter name');
@@ -37,11 +50,26 @@ function Users(props) {
   function addShifts() {
     for (let user of userList) {
       if (user.name === "Add Shifts") {
-        props.selectUser(user)
+        selectUser(user)
         return;
       }
     }
-    props.selectUser({ name: 'Add Shifts', maxShifts: 0, prefs: { '_ph': null } })
+    selectUser({ name: 'Add Shifts', maxShifts: 0, prefs: { '_ph': null } })
+  }
+
+  function times() {
+    var output = [];
+    for (var i = 0; i < 24; i++) {
+      for (var j = 0; j < 4; j++) {
+        output.push(pad(`${i}${(j * 15) || '00'}`, 4))
+      }
+    }
+    return output
+    function pad(n, width, z) {
+      z = z || '0';
+      n = n + '';
+      return n.length >= width ? n : new Array(width - n.length + 1).join(z) + n;
+    }
   }
 
   return (
@@ -56,7 +84,7 @@ function Users(props) {
               }
               return null
             }
-            return (<div key={user.name} onClick={() => { props.selectUser(user) }} className="user">{user.name}</div>)
+            return (<div key={user.name} onClick={() => { selectUser(user) }} className="user">{user.name}</div>)
           })
         }
         {

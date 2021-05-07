@@ -35,7 +35,6 @@ function Schedules({ showingSchedules, shifts, setShifts, setBestSchedule, user,
   // converts preference-format shifts into an array of arrays, each subarray being a shift
   function shiftBreak(shifts) {
     let slotArray = [];
-    delete shifts._ph
     for (let slot in shifts) {
       slotArray.push(slot);
     }

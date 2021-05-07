@@ -14,6 +14,7 @@ function Calendar({ user, selectUser, displayMode, showingSchedules, showSchedul
   }
 
   */
+
   const [prefs, setPrefs] = useState(user.prefs)
   const [paintMode, setPaintMode] = useState(false);
   const [painting, setPainting] = useState(false);
