@@ -53,7 +53,7 @@ function Users({ selectedUser, selectUser }) {
         return;
       }
     }
-    selectUser({ name: 'Add Shifts', maxShifts: 0, prefs: { '_ph': null } })
+    selectUser({ name: 'Add Shifts', maxShifts: 0, prefs: populatePrefs() })
   }
 
   function times() {

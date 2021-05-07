@@ -36,7 +36,9 @@ function Schedules({ showingSchedules, shifts, setShifts, setBestSchedule, user,
   function shiftBreak(shifts) {
     let slotArray = [];
     for (let slot in shifts) {
-      slotArray.push(slot);
+      if (shifts[slot]) {
+        slotArray.push(slot);
+      }
     }
     let shiftArray = [];
     let currentShift = [];
@@ -97,6 +99,7 @@ function Schedules({ showingSchedules, shifts, setShifts, setBestSchedule, user,
 
     function score(inputSchedule) {
       let totalScore = 0;
+      console.log('localShifts: ', localShifts)
 
       // if the number of shifts is not evenly divisble by the number of users, and each user can work the same amount, the master schedule will be too long, and so must get truncated.
       let schedule = inputSchedule.slice(0, localShifts.length)
@@ -140,18 +143,17 @@ function Schedules({ showingSchedules, shifts, setShifts, setBestSchedule, user,
     array[first] = array[second];
     array[second] = temporaryValue;
 
-    if (third || third === 0) {
-      temporaryValue = array[first];
-      array[first] = array[third];
-      array[third] = temporaryValue;
-    }
+    temporaryValue = array[first];
+    array[first] = array[third];
+    array[third] = temporaryValue;
+
     return array;
   }
 
   return (
     <div className="schedules">
       {
-        generating ? <div>Error: cannot display schedule. There is likely no possible schedule with the current preferences and shifts. Double check these and try again</div> : null
+        generating ? <div>Error: Cannot display schedule. There is likely no possible schedule with the current preferences and shifts. Double check these and try again</div> : null
       }
 
       <button className="button" onClick={generateSchedules}>Generate Schedule</button>
