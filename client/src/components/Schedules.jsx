@@ -99,7 +99,6 @@ function Schedules({ showingSchedules, shifts, setShifts, setBestSchedule, user,
 
     function score(inputSchedule) {
       let totalScore = 0;
-      console.log('localShifts: ', localShifts)
 
       // if the number of shifts is not evenly divisble by the number of users, and each user can work the same amount, the master schedule will be too long, and so must get truncated.
       let schedule = inputSchedule.slice(0, localShifts.length)
