@@ -1,19 +1,51 @@
 # Weekli: a preference saving schedule maker for repeating weekly schedules
 
-This program allows multiple users to enter in preferences for working a given time block, and after entering shift times can generate schedules that best fit the users' preferences
+This program allows multiple users to enter preferences for working blocks of time, and after entering shifts can generate schedules that best fit the users' preferences.
 
-## To start:
+## Getting started
 
-Ensure an instance of MongoDB is running on the default port 27017.
+### Prerequisites
 
-Run 'npm start'
+* [MongoDB](https://docs.mongodb.com/manual/installation/)
+* [Node.js](https://nodejs.org/en/download/)
 
-## To use:
+### Installation
 
-Add users with the 'Add New User' button and use the schedule interface to set preferences for specific periods of time. Click the preference selector (starts at 'No preference') to cycle through the preference options. These options include 'Cannot work', 'Prefer not to work', 'No preference', 'Prefer to work', and 'Must work'. Time can be selected by clicking individual 15-minute blocks, or by toggling the 'Enable painting' button, which allows a user to quickly set preferences for stretches of time. To paint a block of time, click once to begin painting, then move the mouse over blocks to fill them in, then click again to stop painting (clicking and dragging will not work!).
+1. Clone this repo to your device `git clone https://github.com/evanjordan42/Weekli.git`.
+2. Navigate to the `Weekli` folder in the terminal.
+3. Run `npm install`.
 
-Each user must also enter the maximum number of shifts they are available for.
+### Initializing Server
 
-Enter shifts by clicking the 'Set Shifts' button and defining blocks of time in the same manner as setting preferences.
+1. Ensure an instance of MongoDB is running on the default port 27017.
+2. Navigate to the `Weekli` folder in the terminal.
+3. Run `npm start`.
+4. Navigate to `http://localhost:8000` in your browser.
 
-To view a generated schedule, click the 'Go to schedule' button, then click 'Generate schedule'.
+
+## Using Weekli
+
+### Add users
+
+1. Click the `Add User` button and enter a name.
+2. Click `Add`, this will take you to that user's preference page.
+
+### Set preferences
+
+1. Click a user's name to enter the preference-setting interface.
+2. Click the preference selector button (starts at `No preference`) to cycle through the options, including `Cannot work`, `Prefer not to work`, `No preference`, `Prefer to work`, and `Must work`.
+3. Fill in periods of time by clicking individual 15 minute blocks or by clicking and dragging.
+4. Make sure to enter the maximum number of shifts that user can work in a week.
+5. Click `Save and exit`.
+
+### Set shifts
+
+1. Click `Set Shifts` to enter the shift-setting interface.
+2. Setting shifts works the same way as setting preferences.
+3. Enter the number of shifts in a week.
+4. Click `Save and exit`
+
+### Generate schedule
+
+1. Click `Go to Schedule`.
+2. Click `Generate schedule`.
