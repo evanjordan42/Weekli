@@ -1,3 +1,6 @@
+
+
+
 # Weekli: a preference saving schedule maker for repeating weekly schedules
 
 This program allows multiple users to enter preferences for working blocks of time, and after entering shifts can generate schedules that best fit the users' preferences.
@@ -49,3 +52,12 @@ This program allows multiple users to enter preferences for working blocks of ti
 
 1. Click `Go to Schedule`.
 2. Click `Generate schedule`.
+
+## Video Demo
+
+
+
+https://user-images.githubusercontent.com/76127010/124680133-9a3d0a00-de7a-11eb-9eb8-9024762fb010.mov
+
+
+
